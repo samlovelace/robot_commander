@@ -25,4 +25,7 @@ void InputHandler::handle(const std::string& anInput)
             std::cout << CYAN << "Sending Joint Position Waypoint!" << std::endl;
         }
     }
+    else{
+        std::cout << RED << "Unsupported command!" << std::endl; 
+    }
 }
