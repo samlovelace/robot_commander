@@ -10,6 +10,7 @@ find_package(ament_cmake REQUIRED)
 
 set(SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/src/main.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/InputHandler.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
