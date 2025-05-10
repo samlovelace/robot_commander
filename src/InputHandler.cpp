@@ -47,7 +47,7 @@ void InputHandler::handle(const std::string& anInput)
             arm_idl::msg::JointPositionWaypoint cmd; 
             cmd.set__positions(jntPosCmd); 
             cmd.set__tolerances(jntTol); 
-            RosTopicManager::getInstance()->publishMessage<arm_idl::msg::JointPositionWaypoint>("joint_position_waypoint", cmd); 
+            RosTopicManager::getInstance()->publishMessage<arm_idl::msg::JointPositionWaypoint>("arm/joint_position_waypoint", cmd); 
             std::cout << CYAN << "Published joint position waypoint cmd!" << std::endl; 
         }
         else{

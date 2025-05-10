@@ -17,7 +17,7 @@ bool CommanderComms::start()
 {
 
     auto topicManager = RosTopicManager::getInstance(); 
-    topicManager->createPublisher<arm_idl::msg::JointPositionWaypoint>("joint_position_waypoint"); 
+    topicManager->createPublisher<arm_idl::msg::JointPositionWaypoint>("arm/joint_position_waypoint"); 
     
     topicManager->spinNode(); 
 
