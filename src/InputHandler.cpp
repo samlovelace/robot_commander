@@ -6,6 +6,7 @@
 
 #include "RosTopicManager.hpp"
 #include "arm_idl/msg/joint_position_waypoint.hpp"
+#include "arm_idl/msg/enable.hpp"
 
 InputHandler::InputHandler()
 {
@@ -53,6 +54,31 @@ void InputHandler::handle(const std::string& anInput)
         else{
             std::cout << RED << "Unsupported waypoint type!" << std::endl; 
         }
+    }
+    else if ("enable" == anInput)
+    {
+        std::cout << GREEN << "Hardware:";
+        std::string hardwareName; 
+        std::getline(std::cin, hardwareName); 
+
+        arm_idl::msg::Enable cmd; 
+        cmd.set__enabled(true); 
+
+        RosTopicManager::getInstance()->publishMessage<arm_idl::msg::Enable>("arm/enable", cmd); 
+        std::cout << CYAN << "Sent enable command for " << hardwareName << std::endl; 
+    }
+    else if ("disable" == anInput)
+    {
+        std::cout << GREEN << "Hardware:";
+        std::string hardwareName; 
+        std::getline(std::cin, hardwareName); 
+
+        arm_idl::msg::Enable cmd; 
+        cmd.set__enabled(false); 
+
+        RosTopicManager::getInstance()->publishMessage<arm_idl::msg::Enable>("arm/enable", cmd); 
+        std::cout << CYAN << "Sent disable command for " << hardwareName << std::endl; 
+
     }
     else if ("stow" == anInput)
     {
