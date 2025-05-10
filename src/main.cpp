@@ -1,7 +1,9 @@
 #include <iostream> 
 #include "Colors.hpp"
 #include "InputHandler.h"
-#include <rclcpp/rclcpp.hpp>
+#include "CommanderComms.h"
+#include <signal.h>
+
 
 void signaled(int)
 {
@@ -10,7 +12,7 @@ void signaled(int)
 
 int main()
 {
-    std::signal(SIGINT, signaled); 
+    signal(SIGINT, signaled); 
     std::cout << R"(
      ___      .______      .___  ___.      ______   ______   .___  ___. .___  ___.      ___      .__   __.  _______   _______ .______      
     /   \     |   _  \     |   \/   |     /      | /  __  \  |   \/   | |   \/   |     /   \     |  \ |  | |       \ |   ____||   _  \     
@@ -20,10 +22,12 @@ int main()
 /__/     \__\ | _| `._____||__|  |__|     \______| \______/  |__|  |__| |__|  |__| /__/     \__\ |__| \__| |_______/ |_______|| _| `._____|
     )" << std::endl;
 
-    rclcpp::init(0, nullptr); 
+    InputHandler inputHandler; 
+    
+    CommanderComms comms; 
+    comms.start(); 
 
     std::string command; 
-    InputHandler inputHandler; 
 
     while(true)
     {
@@ -39,5 +43,5 @@ int main()
         inputHandler.handle(command); 
     }
 
-    rclcpp::shutdown(); 
+    comms.stop(); 
 }

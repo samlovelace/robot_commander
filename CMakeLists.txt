@@ -8,8 +8,10 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(arm_idl REQUIRED)
 
 set(SOURCES
+    ${CMAKE_CURRENT_LIST_DIR}/src/CommanderComms.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/main.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/InputHandler.cpp
 )
@@ -22,6 +24,7 @@ include_directories(${PROJECT_NAME}
 
 ament_target_dependencies(${PROJECT_NAME}
   rclcpp
+  arm_idl
 )
 
 install(TARGETS ${PROJECT_NAME} 
