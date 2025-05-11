@@ -42,7 +42,7 @@ void InputHandler::handle(const std::string& anInput)
                 std::cout << "Joint " << i << ": "; 
                 std::getline(std::cin, posStr);
                 
-                jntPosCmd[i] = std::stoi(posStr); 
+                jntPosCmd[i] = std::stod(posStr); 
             }
 
             arm_idl::msg::JointPositionWaypoint cmd; 
