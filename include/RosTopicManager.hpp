@@ -75,7 +75,7 @@ public:
 
 private:
 
-    RosTopicManager(/* args */) : Node("ARM") { }
+    RosTopicManager(/* args */) : Node("arm_commander") { }
     ~RosTopicManager() {rclcpp::shutdown(); }
 
     std::map<std::string, rclcpp::PublisherBase::SharedPtr> mPublishers;
