@@ -132,6 +132,32 @@ void InputHandler::handle(const std::string& anInput)
     {
         // send deploy cmd
     }
+    else if (anInput == "help" || anInput == "--help" || anInput == "-h") 
+    {
+        std::cout << R"(
+        Arm Commander Tool
+        -----------------------------
+        Interact with the arm control module by sending waypoints and control commands.
+        
+        Usage:
+        <tool_name> [command]
+        
+        Available Commands:
+        
+        waypoint         Send a waypoint to the arm.s
+                            • jointPos  - Joint-space position command
+                            • taskPos   - Task-space pose command (x, y, z, quaternion)
+        
+        enable           Enable a specific hardware
+        disable          Disable a specific hardware
+        stow             (Not yet implemented)
+        deploy           (Not yet implemented)
+        
+        Type 'help' or '--help' to show this message again.
+        )" << std::endl;
+        std::string test; 
+        std::getline(std::cin, test); 
+    }       
     else{
         std::cout << RED << "Unsupported command!" << std::endl; 
     }
