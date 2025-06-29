@@ -35,7 +35,7 @@ void InputHandler::handle(const std::string& anInput)
 
             int numJoints = std::stoi(numJointsStr); 
             std::vector<double> jntPosCmd(numJoints);
-            std::vector<double> jntTol(numJoints, 0.1);
+            std::vector<double> jntTol(numJoints, 0.05);
 
             for(int i = 0; i < numJoints; i++)
             {
