@@ -5,9 +5,7 @@
 #include <string> 
 
 #include "RosTopicManager.hpp"
-#include "arm_idl/msg/joint_position_waypoint.hpp"
-#include "arm_idl/msg/task_position_waypoint.hpp"
-#include "arm_idl/msg/enable.hpp"
+#include "CommanderComms.h"
 
 InputHandler::InputHandler()
 {
@@ -131,6 +129,24 @@ void InputHandler::handle(const std::string& anInput)
     else if ("deploy" == anInput)
     {
         // send deploy cmd
+    }
+    else if ("plan" == anInput)
+    {
+        std::cout << GREEN << "Task: "; 
+        std::string taskType; 
+        std::getline(std::cin, taskType);
+
+        std_msgs::msg::String command; 
+        command.set__data("plan"); 
+        
+        std_msgs::msg::String type; 
+        type.set__data(taskType); 
+
+        arm_idl::msg::Command cmd; 
+        cmd.set__command(command); 
+        cmd.set__type(type); 
+        RosTopicManager::getInstance()->publishMessage<arm_idl::msg::Command>("arm/command", cmd); 
+        
     }
     else if (anInput == "help" || anInput == "--help" || anInput == "-h") 
     {
