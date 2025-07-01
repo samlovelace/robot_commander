@@ -3,12 +3,15 @@
 #include <vector> 
 #include <iostream>
 #include <string> 
+#include <ament_index_cpp/get_package_share_directory.hpp>
 
 #include "RosTopicManager.hpp"
 #include "CommanderComms.h"
+#include "PointCloudHandler.h"
 
 InputHandler::InputHandler()
 {
+    mPackagePath = ament_index_cpp::get_package_share_directory("arm_commander");
 
 }
 
@@ -136,16 +139,52 @@ void InputHandler::handle(const std::string& anInput)
         std::string taskType; 
         std::getline(std::cin, taskType);
 
-        std_msgs::msg::String command; 
-        command.set__data("plan"); 
-        
-        std_msgs::msg::String type; 
-        type.set__data(taskType); 
+        if("pick" == taskType)
+        {
+            std::cout << GREEN << "Object: "; 
+            std::string objectType; 
+            std::getline(std::cin, objectType); 
 
-        arm_idl::msg::Command cmd; 
-        cmd.set__command(command); 
-        cmd.set__type(type); 
-        RosTopicManager::getInstance()->publishMessage<arm_idl::msg::Command>("arm/command", cmd); 
+            // read in point cloud of object
+            // TODO: Move this somehwere else because it will grow 
+            std::string cloudFile = ""; 
+            if("test" == objectType || "rectPrism" == objectType || "rectangularPrism" == objectType)
+            {    
+                cloudFile = "rectangularPrism.ply"; 
+            }
+            else 
+            {
+                std::cerr << "Object type: " << objectType << " not supported. Please add .ply file to models dir"; 
+                return; 
+            }
+
+            std::string file = mPackagePath + "/objects/" + cloudFile; 
+            sensor_msgs::msg::PointCloud2 cloud; 
+
+            if(!PointCloudHandler::fromFile(file, cloud))
+            {
+                std::cerr << "Failed to send pick plan request"; 
+                return; 
+            }
+
+            arm_idl::msg::PlanCommand cmd;  
+            cmd.set__operation_type(arm_idl::msg::PlanCommand::PICK);
+
+            cmd.set__object_id(0); 
+
+            // TODO: get this from config somehow 
+            geometry_msgs::msg::Point centroid_gl; 
+            centroid_gl.set__x(0); 
+            centroid_gl.set__y(0); 
+            centroid_gl.set__z(0); 
+
+            cmd.set__pick_obj_centroid_gl(centroid_gl); 
+            cmd.set__pick_obj_point_cloud_gl(cloud); 
+
+            cmd.set__object_type("box"); 
+            geometry_msgs::msg::Pose placePose; 
+            cmd.set__place_pose(placePose); 
+        }
         
     }
     else if (anInput == "help" || anInput == "--help" || anInput == "-h") 

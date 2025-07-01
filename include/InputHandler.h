@@ -13,6 +13,8 @@ public:
     void handle(const std::string& anInput); 
 
 private:
+
+    std::string mPackagePath; 
    
 };
 #endif //INPUTHANDLER_H
