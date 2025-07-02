@@ -13,11 +13,14 @@ PointCloudHandler::~PointCloudHandler()
 
 bool PointCloudHandler::fromFile(const std::string& aFilePath, sensor_msgs::msg::PointCloud2& aCloudOut)
 {
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud; 
-    if(pcl::io::loadPLYFile<pcl::PointXYZ>(aFilePath, *cloud) == -1)
+    // Define the point cloud object
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
+
+    // Read the PLY file
+    if (pcl::io::loadPLYFile<pcl::PointXYZ>(aFilePath, *cloud) == -1)
     {
-        std::cerr << "Failed to load object point cloud from " << aFilePath; 
-        return false; 
+        std::cerr << "Couldn't read file: " << aFilePath << std::endl;
+        return -1;
     }
 
     pcl::PCLPointCloud2 pcl_pc2;

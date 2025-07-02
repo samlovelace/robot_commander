@@ -12,6 +12,7 @@
 InputHandler::InputHandler()
 {
     mPackagePath = ament_index_cpp::get_package_share_directory("arm_commander");
+    std::cout << "Package path: " << mPackagePath << std::endl; 
 
 }
 
@@ -147,10 +148,14 @@ void InputHandler::handle(const std::string& anInput)
 
             // read in point cloud of object
             // TODO: Move this somehwere else because it will grow 
-            std::string cloudFile = ""; 
+            std::string cloudFile; 
             if("test" == objectType || "rectPrism" == objectType || "rectangularPrism" == objectType)
             {    
                 cloudFile = "rectangularPrism.ply"; 
+            }
+            else if ("simple" == objectType)
+            {
+                cloudFile = "simple.ply"; 
             }
             else 
             {
@@ -170,7 +175,8 @@ void InputHandler::handle(const std::string& anInput)
             arm_idl::msg::PlanCommand cmd;  
             cmd.set__operation_type(arm_idl::msg::PlanCommand::PICK);
 
-            cmd.set__object_id(0); 
+            cmd.set__object_id(objectType);
+            cmd.set__object_type(objectType);  
 
             // TODO: get this from config somehow 
             geometry_msgs::msg::Point centroid_gl; 
@@ -184,6 +190,8 @@ void InputHandler::handle(const std::string& anInput)
             cmd.set__object_type("box"); 
             geometry_msgs::msg::Pose placePose; 
             cmd.set__place_pose(placePose); 
+
+            RosTopicManager::getInstance()->publishMessage<arm_idl::msg::PlanCommand>("arm/command", cmd); 
         }
         
     }
