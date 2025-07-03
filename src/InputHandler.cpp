@@ -161,6 +161,14 @@ void InputHandler::handle(const std::string& anInput)
             {
                 cloudFile = "Box.ply"; 
             }
+            else if ("cylinder" == objectType)
+            {
+                cloudFile = "Cylinder.ply"; 
+            }
+            else if ("banana" == objectType)
+            {
+                cloudFile = "banana.ply"; 
+            }
             else 
             {
                 std::cerr << "Object type: " << objectType << " not supported. Please add .ply file to models dir"; 
