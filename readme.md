@@ -1,8 +1,13 @@
-# ARM Commander 
-The Arm Commander is a tool for sending waypoints and other commands to the ARM module
+# Robot Commander 
+The Robot Commander is a command line tool for sending commands to various subsystems
 
 ## Installation 
-Clone the arm repo from https://github.com/samlovelace/arm.git and run the clone.sh script 
+Clone into the robot_ws with the folder structure as
+
+robot_ws
+  - src
+    - robot_idl
+    - robot_commander
 
 ## Building 
 Compile the arm workspace 
@@ -15,4 +20,6 @@ $ colcon build
 ### Supported Commands 
  - enable
  - waypoint 
+ - plan
+ - 
 
