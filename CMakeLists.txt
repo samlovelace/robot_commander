@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(arm_commander)
+project(robot_commander)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -8,7 +8,7 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(arm_idl REQUIRED)
+find_package(robot_idl REQUIRED)
 find_package(PCL REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(pcl_msgs REQUIRED)
@@ -31,7 +31,7 @@ include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} ${PCL_LIBRARIES})
 ament_target_dependencies(${PROJECT_NAME}
   rclcpp
-  arm_idl
+  robot_idl
   pcl_msgs
   pcl_conversions
 )

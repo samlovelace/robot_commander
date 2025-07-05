@@ -11,7 +11,7 @@
 
 InputHandler::InputHandler()
 {
-    mPackagePath = ament_index_cpp::get_package_share_directory("arm_commander");
+    mPackagePath = ament_index_cpp::get_package_share_directory("robot_commander");
     std::cout << "Package path: " << mPackagePath << std::endl; 
 
 }
