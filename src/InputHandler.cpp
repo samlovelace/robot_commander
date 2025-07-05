@@ -207,6 +207,24 @@ void InputHandler::handle(const std::string& anInput)
         }
         
     }
+    else if ("find_object" == anInput)
+    {
+        std::cout << GREEN << "Type: "; 
+        std::string objectType; 
+        std::getline(std::cin, objectType); 
+
+        std_msgs::msg::String action;
+        action.set__data("find_object"); 
+
+        std_msgs::msg::String type;
+        type.set__data(objectType);  
+
+        vision_idl::msg::Command cmd; 
+        cmd.set__command(action); 
+        cmd.set__object_type(type); 
+
+        RosTopicManager::getInstance()->publishMessage<vision_idl::msg::Command>("vision/command", cmd); 
+    }
     else if (anInput == "help" || anInput == "--help" || anInput == "-h") 
     {
         std::cout << R"(
