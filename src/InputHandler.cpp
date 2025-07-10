@@ -242,7 +242,7 @@ void InputHandler::handle(const std::string& anInput)
     else if (anInput == "help" || anInput == "--help" || anInput == "-h") 
     {
         std::cout << R"(
-        Arm Commander Tool
+        Robot Commander Tool
         -----------------------------
         Interact with the arm control module by sending waypoints and control commands.
         
@@ -251,14 +251,23 @@ void InputHandler::handle(const std::string& anInput)
         
         Available Commands:
         
+        ####################### A.R.M #####################
+        
         waypoint         Send a waypoint to the arm.s
                             • jointPos  - Joint-space position command
                             • taskPos   - Task-space pose command (x, y, z, quaternion)
+
+        plan             Send a point cloud to do manipulation planning 
         
         enable           Enable a specific hardware
         disable          Disable a specific hardware
         stow             (Not yet implemented)
         deploy           (Not yet implemented)
+
+        ####################### Vision #######################
+
+        find_object         command vision system to look for a certain type of object
+        stopVision          disable vision system
         
         Type 'help' or '--help' to show this message again.
         )" << std::endl;
