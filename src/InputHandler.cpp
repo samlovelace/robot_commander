@@ -225,6 +225,20 @@ void InputHandler::handle(const std::string& anInput)
 
         RosTopicManager::getInstance()->publishMessage<vision_idl::msg::Command>("vision/command", cmd); 
     }
+    else if ("stopVision" == anInput)
+    {
+        std_msgs::msg::String action;
+        action.set__data("disable"); 
+
+        std_msgs::msg::String type;
+        type.set__data("none");  
+
+        vision_idl::msg::Command cmd; 
+        cmd.set__command(action); 
+        cmd.set__object_type(type); 
+
+        RosTopicManager::getInstance()->publishMessage<vision_idl::msg::Command>("vision/command", cmd); 
+    }
     else if (anInput == "help" || anInput == "--help" || anInput == "-h") 
     {
         std::cout << R"(
