@@ -48,10 +48,10 @@ void InputHandler::handle(const std::string& anInput)
                 jntPosCmd[i] = std::stod(posStr); 
             }
 
-            arm_idl::msg::JointPositionWaypoint cmd; 
+            robot_idl::msg::JointPositionWaypoint cmd; 
             cmd.set__positions(jntPosCmd); 
             cmd.set__tolerances(jntTol); 
-            RosTopicManager::getInstance()->publishMessage<arm_idl::msg::JointPositionWaypoint>("arm/joint_position_waypoint", cmd); 
+            RosTopicManager::getInstance()->publishMessage<robot_idl::msg::JointPositionWaypoint>("arm/joint_position_waypoint", cmd); 
             std::cout << CYAN << "Published joint position waypoint cmd!" << std::endl; 
         }
         else if ("taskPos" == waypointType)
@@ -88,12 +88,12 @@ void InputHandler::handle(const std::string& anInput)
             pose.set__orientation(q); 
             pose.set__position(pt); 
 
-            arm_idl::msg::TaskPositionWaypoint wp; 
+            robot_idl::msg::TaskPositionWaypoint wp; 
             wp.set__command_frame(cmdFrame); 
             wp.set__tolerance(jntTol);
             wp.set__pose(pose);
 
-            RosTopicManager::getInstance()->publishMessage<arm_idl::msg::TaskPositionWaypoint>("arm/task_position_waypoint", wp); 
+            RosTopicManager::getInstance()->publishMessage<robot_idl::msg::TaskPositionWaypoint>("arm/task_position_waypoint", wp); 
             std::cout << CYAN << "Published task position waypoint cmd!" << std::endl; 
 
         }
@@ -107,10 +107,10 @@ void InputHandler::handle(const std::string& anInput)
         std::string hardwareName; 
         std::getline(std::cin, hardwareName); 
 
-        arm_idl::msg::Enable cmd; 
+        robot_idl::msg::Enable cmd; 
         cmd.set__enabled(true); 
 
-        RosTopicManager::getInstance()->publishMessage<arm_idl::msg::Enable>("arm/enable", cmd); 
+        RosTopicManager::getInstance()->publishMessage<robot_idl::msg::Enable>("arm/enable", cmd); 
         std::cout << CYAN << "Sent enable command for " << hardwareName << std::endl; 
     }
     else if ("disable" == anInput)
@@ -119,10 +119,10 @@ void InputHandler::handle(const std::string& anInput)
         std::string hardwareName; 
         std::getline(std::cin, hardwareName); 
 
-        arm_idl::msg::Enable cmd; 
+        robot_idl::msg::Enable cmd; 
         cmd.set__enabled(false); 
 
-        RosTopicManager::getInstance()->publishMessage<arm_idl::msg::Enable>("arm/enable", cmd); 
+        RosTopicManager::getInstance()->publishMessage<robot_idl::msg::Enable>("arm/enable", cmd); 
         std::cout << CYAN << "Sent disable command for " << hardwareName << std::endl; 
 
     }
@@ -169,6 +169,10 @@ void InputHandler::handle(const std::string& anInput)
             {
                 cloudFile = "banana.ply"; 
             }
+            else if ("cube" == objectType)
+            {
+                cloudFile = "cube.ply"; 
+            }
             else 
             {
                 std::cerr << "Object type: " << objectType << " not supported. Please add .ply file to models dir"; 
@@ -184,8 +188,8 @@ void InputHandler::handle(const std::string& anInput)
                 return; 
             }
 
-            arm_idl::msg::PlanCommand cmd;  
-            cmd.set__operation_type(arm_idl::msg::PlanCommand::PICK);
+            robot_idl::msg::PlanCommand cmd;  
+            cmd.set__operation_type(robot_idl::msg::PlanCommand::PICK);
 
             cmd.set__object_id(objectType);
             cmd.set__object_type(objectType);  
@@ -203,7 +207,7 @@ void InputHandler::handle(const std::string& anInput)
             geometry_msgs::msg::Pose placePose; 
             cmd.set__place_pose(placePose); 
 
-            RosTopicManager::getInstance()->publishMessage<arm_idl::msg::PlanCommand>("arm/command", cmd); 
+            RosTopicManager::getInstance()->publishMessage<robot_idl::msg::PlanCommand>("arm/command", cmd); 
         }
         
     }
@@ -219,11 +223,11 @@ void InputHandler::handle(const std::string& anInput)
         std_msgs::msg::String type;
         type.set__data(objectType);  
 
-        vision_idl::msg::Command cmd; 
+        robot_idl::msg::Command cmd; 
         cmd.set__command(action); 
         cmd.set__object_type(type); 
 
-        RosTopicManager::getInstance()->publishMessage<vision_idl::msg::Command>("vision/command", cmd); 
+        RosTopicManager::getInstance()->publishMessage<robot_idl::msg::Command>("vision/command", cmd); 
     }
     else if ("stopVision" == anInput)
     {
@@ -233,11 +237,11 @@ void InputHandler::handle(const std::string& anInput)
         std_msgs::msg::String type;
         type.set__data("none");  
 
-        vision_idl::msg::Command cmd; 
+        robot_idl::msg::Command cmd; 
         cmd.set__command(action); 
         cmd.set__object_type(type); 
 
-        RosTopicManager::getInstance()->publishMessage<vision_idl::msg::Command>("vision/command", cmd); 
+        RosTopicManager::getInstance()->publishMessage<robot_idl::msg::Command>("vision/command", cmd); 
     }
     else if (anInput == "help" || anInput == "--help" || anInput == "-h") 
     {
