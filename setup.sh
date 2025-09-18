@@ -124,7 +124,7 @@ make -j"$CORES" && make install && ldconfig
 
 cd "$WS"
 source /opt/ros/humble/setup.bash
-colcon build --packages-select robot_idl arm_configs arm 
+colcon build --packages-select robot_idl robot_commander
 
 
 
