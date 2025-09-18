@@ -87,6 +87,7 @@ DEPENDENCIES=(
     cmake
     git
     curl
+    libpcl-dev
 )
 
 # Ensure script is run as root
@@ -102,25 +103,6 @@ check_and_install "ros-humble-desktop" "install_ros"
 for pkg in "${DEPENDENCIES[@]}"; do
     check_and_install "$pkg"
 done
-
-# Ensure the directory exists
-mkdir -p "$LIB_DIR"
-mkdir -p "$WS"/src
-
-#pcl 
-cd "$LIB_DIR"
-git clone https://github.com/PointCloudLibrary/pcl.git
-cd pcl
-git checkout pcl-1.15.0
-mkdir build && cd build 
-cmake .. \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DBUILD_SHARED_LIBS=ON \
-  -DBUILD_tools=OFF \
-  -DBUILD_examples=OFF \
-  -DWITH_VTK=ON
-
-make -j"$CORES" && make install && ldconfig
 
 cd "$WS"
 source /opt/ros/humble/setup.bash
