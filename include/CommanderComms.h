@@ -1,12 +1,12 @@
 #ifndef COMMANDERCOMMS_H
 #define COMMANDERCOMMS_H
 
-#include "arm_idl/msg/joint_position_waypoint.hpp"
-#include "arm_idl/msg/enable.hpp"
-#include "arm_idl/msg/task_position_waypoint.hpp"
-#include "arm_idl/msg/plan_command.hpp"
+#include "robot_idl/msg/joint_position_waypoint.hpp"
+#include "robot_idl/msg/enable.hpp"
+#include "robot_idl/msg/task_position_waypoint.hpp"
+#include "robot_idl/msg/plan_command.hpp"
 
-#include "vision_idl/msg/command.hpp"
+#include "robot_idl/msg/command.hpp"
  
 class CommanderComms 
 { 
