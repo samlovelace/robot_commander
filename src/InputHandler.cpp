@@ -54,6 +54,31 @@ void InputHandler::handle(const std::string& anInput)
             RosTopicManager::getInstance()->publishMessage<robot_idl::msg::JointPositionWaypoint>("arm/joint_position_waypoint", cmd); 
             std::cout << CYAN << "Published joint position waypoint cmd!" << std::endl; 
         }
+        else if ("jointVel" == waypointType)
+        {
+            std::cout << "Num Joints: "; 
+            std::string numJointsStr; 
+            std::getline(std::cin, numJointsStr);
+
+            int numJoints = std::stoi(numJointsStr); 
+            std::vector<double> jntVelCmd(numJoints);
+            std::vector<double> jntTol(numJoints, 0.05);
+
+            for(int i = 0; i < numJoints; i++)
+            {
+                std::string posStr; 
+                std::cout << "Joint " << i << ": "; 
+                std::getline(std::cin, posStr);
+                
+                jntVelCmd[i] = std::stod(posStr); 
+            }
+
+            robot_idl::msg::JointVelocityWaypoint cmd; 
+            cmd.set__velocities(jntVelCmd); 
+            cmd.set__tolerances(jntTol); 
+            RosTopicManager::getInstance()->publishMessage<robot_idl::msg::JointVelocityWaypoint>("arm/joint_velocity_waypoint", cmd); 
+            std::cout << CYAN << "Published joint velocity waypoint cmd!" << std::endl; 
+        }
         else if ("taskPos" == waypointType)
         {
             std::vector<std::string> axes = {"x", "y", "z", "qw", "qx", "qy", "qz"}; 
