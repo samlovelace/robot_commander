@@ -97,6 +97,63 @@ void InputHandler::handle(const std::string& anInput)
             std::cout << CYAN << "Published task position waypoint cmd!" << std::endl; 
 
         }
+        else if ("taskVel" == waypointType)
+        {
+            std::vector<std::string> axes = {"x", "y", "z", "wx", "wy", "wz"}; 
+            std::vector<double> twist(6); 
+            
+            for(int i = 0; i < axes.size(); i++)
+            {
+                std::string tmp; 
+                std::cout << axes[i] << ": "; 
+                std::getline(std::cin, tmp); 
+
+                twist[i] = std::stod(tmp); 
+            }
+
+            std::vector<double> taskTol(6, 0.1);
+            std::string commandFrame = "base"; 
+
+            std_msgs::msg::String cmdFrame;
+            cmdFrame.set__data(commandFrame);  
+            
+            geometry_msgs::msg::Vector3 linTol; 
+            linTol.set__x(taskTol[0]); 
+            linTol.set__y(taskTol[1]);
+            linTol.set__z(taskTol[2]);
+
+            geometry_msgs::msg::Vector3 angTol; 
+            angTol.set__x(taskTol[3]); 
+            angTol.set__y(taskTol[4]);
+            angTol.set__z(taskTol[5]);
+            
+            geometry_msgs::msg::Twist tol; 
+            tol.set__angular(angTol); 
+            tol.set__linear(linTol);
+            
+            geometry_msgs::msg::Vector3 linGoal; 
+            linGoal.set__x(twist[0]); 
+            linGoal.set__y(twist[1]);
+            linGoal.set__z(twist[2]);
+
+            geometry_msgs::msg::Vector3 angGoal; 
+            angGoal.set__x(twist[3]); 
+            angGoal.set__y(twist[4]);
+            angGoal.set__z(twist[5]);
+            
+            geometry_msgs::msg::Twist goal; 
+            goal.set__angular(angGoal); 
+            goal.set__linear(linGoal);
+
+            robot_idl::msg::TaskVelocityWaypoint wp; 
+            wp.set__command_frame(cmdFrame); 
+            wp.set__tolerance(tol);
+            wp.set__goal(goal); 
+
+            RosTopicManager::getInstance()->publishMessage<robot_idl::msg::TaskVelocityWaypoint>("arm/task_velocity_waypoint", wp); 
+            std::cout << CYAN << "Published task velocity waypoint cmd!" << std::endl;
+
+        }
         else{
             std::cout << RED << "Unsupported waypoint type!" << std::endl; 
         }
