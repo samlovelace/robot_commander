@@ -24,6 +24,8 @@ bool CommanderComms::start()
     topicManager->createPublisher<robot_idl::msg::JointVelocityWaypoint>("arm/joint_velocity_waypoint");  
     topicManager->createPublisher<robot_idl::msg::PlanCommand>("arm/command"); 
     topicManager->createPublisher<robot_idl::msg::Command>("vision/command"); 
+
+    topicManager->createPublisher<robot_idl::msg::AbvCommand>("abv/command"); 
     
     topicManager->spinNode(); 
 

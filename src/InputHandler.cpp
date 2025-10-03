@@ -325,6 +325,37 @@ void InputHandler::handle(const std::string& anInput)
 
         RosTopicManager::getInstance()->publishMessage<robot_idl::msg::Command>("vision/command", cmd); 
     }
+    else if ("vehPose" == anInput)
+{
+    std::array<double, 3> vehPose;
+    std::string vehPoseStr;
+
+    std::cout << "Enter goal pose (x, y, yaw): ";
+    std::getline(std::cin, vehPoseStr);
+
+    std::istringstream iss(vehPoseStr);
+    for (int i = 0; i < 3; ++i)
+    {
+        if (!(iss >> vehPose[i]))
+        {
+            std::cerr << "Invalid input. Please enter three space-separated numbers." << std::endl;
+            return;
+        }
+    }
+
+	robot_idl::msg::AbvVec3 data; 
+	data.set__x(vehPose[0]); 
+	data.set__y(vehPose[1]); 
+	data.set__yaw(vehPose[2]); 
+
+	robot_idl::msg::AbvCommand cmd; 
+	cmd.set__data(data); 
+	cmd.set__type("pose");
+	
+	RosTopicManager::getInstance()->publishMessage<robot_idl::msg::AbvCommand>("abv/command", cmd); 
+	std::cout << "Published goal waypoint (x y yaw): " << vehPose[0] << ", " << vehPose[1] << ", " << vehPose[2] << std::endl; 
+}
+
     else if (anInput == "help" || anInput == "--help" || anInput == "-h") 
     {
         std::cout << R"(
