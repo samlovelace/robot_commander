@@ -9,6 +9,7 @@
 #include "robot_idl/msg/plan_command.hpp"
 #include "robot_idl/msg/command.hpp"
 #include "robot_idl/msg/abv_command.hpp"
+#include "robot_idl/msg/gpc_goal.hpp"
  
 class CommanderComms 
 { 
