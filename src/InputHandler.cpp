@@ -407,6 +407,42 @@ void InputHandler::handle(const std::string& anInput)
             return; 
         }
     }
+    else if ("abvWp" == anInput)
+    {
+        std::array<double, 3> vehPose;
+        std::string vehPoseStr;
+
+        std::cout << "Goal pose (x, y, yaw): ";
+        std::getline(std::cin, vehPoseStr);
+
+        std::istringstream iss(vehPoseStr);
+        for (int i = 0; i < 3; ++i)
+        {
+            if (!(iss >> vehPose[i]))
+            {
+                std::cerr << "Invalid input. Please enter three space-separated numbers." << std::endl;
+                return;
+            }
+        }
+
+        std::vector<double> goalVec = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        goalVec[0] = vehPose[0]; // x
+        goalVec[1] = vehPose[1]; // y
+        goalVec[6] = vehPose[2]; // yaw
+
+        robot_idl::msg::GpcGoal goal; 
+        goal.set__mode(0); // always setpoint for wp 
+        goal.set__x_ref(goalVec); 
+
+        RosTopicManager::getInstance()->publishMessage<robot_idl::msg::GpcGoal>("gpc/goal", goal); 
+
+        std::cout << "Published GPC SETPOINT of ";  
+        for(int i = 0; i < goalVec.size(); i++)
+        {
+            std::cout << goalVec[i] << ", "; 
+        }
+        std::cout << std::endl; 
+    }
     else if (anInput == "help" || anInput == "--help" || anInput == "-h") 
     {
         std::cout << R"(
