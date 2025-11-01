@@ -443,6 +443,40 @@ void InputHandler::handle(const std::string& anInput)
         }
         std::cout << std::endl; 
     }
+    else if ("abvTraj" == anInput)
+    {
+        std::string trajType; 
+        std::cout << GREEN << "Type: "; 
+        std::getline(std::cin, trajType);
+
+        robot_idl::msg::GpcGoal goal; 
+        goal.set__mode(robot_idl::msg::GpcGoal::MODE_TRAJECTORY); 
+
+        // default
+        auto trajTypeToSet = robot_idl::msg::GpcGoal::TRAJ_LINE2D; 
+        std::string trajTypeForLog = "DEFAULT"; 
+
+        if("circle" == trajType)
+        {
+            trajTypeToSet = robot_idl::msg::GpcGoal::TRAJ_CIRCLE2D;
+            trajTypeForLog = "Circle2D";  
+        }
+        else if ("line" == trajType)
+        {
+            trajTypeToSet = robot_idl::msg::GpcGoal::TRAJ_LINE2D;
+            trajTypeForLog = "Line2D"; 
+        }
+        else
+        {
+            std::cout << RED << "Unsupported trajectory type" << std::endl;
+            return; 
+        }
+
+        goal.set__trajectory_type(trajTypeToSet); 
+
+        RosTopicManager::getInstance()->publishMessage<robot_idl::msg::GpcGoal>("gpc/goal", goal); 
+        std::cout << "Sent " << trajTypeForLog << " trajectory command for ABV!" << std::endl; 
+    }
     else if (anInput == "help" || anInput == "--help" || anInput == "-h") 
     {
         std::cout << R"(
