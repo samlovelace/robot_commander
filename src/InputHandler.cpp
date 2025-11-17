@@ -217,6 +217,14 @@ void InputHandler::handle(const std::string& anInput)
     {
         // send deploy cmd
     }
+    else if ("pick" == anInput)
+    {
+        // TODO: add full implementation 
+        robot_idl::msg::ManipulationCommand cmd; 
+        cmd.set__cmd(robot_idl::msg::ManipulationCommand::CMD_PICK); 
+
+        RosTopicManager::getInstance()->publishMessage("arm/command", cmd); 
+    }
     else if ("plan" == anInput)
     {
         std::cout << GREEN << "Task: "; 
