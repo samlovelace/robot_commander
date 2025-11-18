@@ -219,88 +219,71 @@ void InputHandler::handle(const std::string& anInput)
     }
     else if ("pick" == anInput)
     {
-        // TODO: add full implementation 
+        std::cout << GREEN << "Object: "; 
+        std::string objectType; 
+        std::getline(std::cin, objectType); 
+
+        // read in point cloud of object
+        // TODO: Move this somehwere else because it will grow 
+        std::string cloudFile; 
+        if("test" == objectType || "rectPrism" == objectType || "rectangularPrism" == objectType)
+        {    
+            cloudFile = "rectangularPrism.ply"; 
+        }
+        else if ("simple" == objectType)
+        {
+            cloudFile = "simple.ply"; 
+        }
+        else if ("box" == objectType)
+        {
+            cloudFile = "Box.ply"; 
+        }
+        else if ("cylinder" == objectType)
+        {
+            cloudFile = "Cylinder.ply"; 
+        }
+        else if ("banana" == objectType)
+        {
+            cloudFile = "banana.ply"; 
+        }
+        else if ("cube" == objectType)
+        {
+            cloudFile = "cube.ply"; 
+        }
+        else 
+        {
+            std::cerr << "Object type: " << objectType << " not supported. Please add .ply file to models dir"; 
+            return; 
+        }
+
+        std::string file = mPackagePath + "/objects/" + cloudFile; 
+        sensor_msgs::msg::PointCloud2 cloud; 
+
+        if(!PointCloudHandler::fromFile(file, cloud))
+        {
+            std::cerr << "Failed to send pick plan request"; 
+            return; 
+        }
+
         robot_idl::msg::ManipulationCommand cmd; 
         cmd.set__cmd(robot_idl::msg::ManipulationCommand::CMD_PICK); 
 
-        RosTopicManager::getInstance()->publishMessage("arm/command", cmd); 
-    }
-    else if ("plan" == anInput)
-    {
-        std::cout << GREEN << "Task: "; 
-        std::string taskType; 
-        std::getline(std::cin, taskType);
+        cmd.set__object_id(objectType);
+        cmd.set__object_type(objectType);  
 
-        if("pick" == taskType)
-        {
-            std::cout << GREEN << "Object: "; 
-            std::string objectType; 
-            std::getline(std::cin, objectType); 
+        // TODO: get this from config somehow 
+        geometry_msgs::msg::Point centroid_gl; 
+        centroid_gl.set__x(0); 
+        centroid_gl.set__y(0); 
+        centroid_gl.set__z(0); 
 
-            // read in point cloud of object
-            // TODO: Move this somehwere else because it will grow 
-            std::string cloudFile; 
-            if("test" == objectType || "rectPrism" == objectType || "rectangularPrism" == objectType)
-            {    
-                cloudFile = "rectangularPrism.ply"; 
-            }
-            else if ("simple" == objectType)
-            {
-                cloudFile = "simple.ply"; 
-            }
-            else if ("box" == objectType)
-            {
-                cloudFile = "Box.ply"; 
-            }
-            else if ("cylinder" == objectType)
-            {
-                cloudFile = "Cylinder.ply"; 
-            }
-            else if ("banana" == objectType)
-            {
-                cloudFile = "banana.ply"; 
-            }
-            else if ("cube" == objectType)
-            {
-                cloudFile = "cube.ply"; 
-            }
-            else 
-            {
-                std::cerr << "Object type: " << objectType << " not supported. Please add .ply file to models dir"; 
-                return; 
-            }
+        cmd.set__pick_obj_centroid_gl(centroid_gl); 
+        cmd.set__pick_obj_point_cloud_gl(cloud); 
+ 
+        // geometry_msgs::msg::Pose placePose; 
+        // cmd.set__place_pose(placePose); 
 
-            std::string file = mPackagePath + "/objects/" + cloudFile; 
-            sensor_msgs::msg::PointCloud2 cloud; 
-
-            if(!PointCloudHandler::fromFile(file, cloud))
-            {
-                std::cerr << "Failed to send pick plan request"; 
-                return; 
-            }
-
-            robot_idl::msg::PlanCommand cmd;  
-            cmd.set__operation_type(robot_idl::msg::PlanCommand::PICK);
-
-            cmd.set__object_id(objectType);
-            cmd.set__object_type(objectType);  
-
-            // TODO: get this from config somehow 
-            geometry_msgs::msg::Point centroid_gl; 
-            centroid_gl.set__x(0); 
-            centroid_gl.set__y(0); 
-            centroid_gl.set__z(0); 
-
-            cmd.set__pick_obj_centroid_gl(centroid_gl); 
-            cmd.set__pick_obj_point_cloud_gl(cloud); 
-
-            cmd.set__object_type("box"); 
-            geometry_msgs::msg::Pose placePose; 
-            cmd.set__place_pose(placePose); 
-
-            RosTopicManager::getInstance()->publishMessage<robot_idl::msg::PlanCommand>("arm/command", cmd); 
-        }
-        
+        RosTopicManager::getInstance()->publishMessage<robot_idl::msg::ManipulationCommand>("arm/command", cmd); 
     }
     else if ("find_object" == anInput)
     {
