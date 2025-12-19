@@ -223,6 +223,8 @@ void InputHandler::handle(const std::string& anInput)
         std::string objectType; 
         std::getline(std::cin, objectType); 
 
+        Eigen::Vector3d pos(0, 0, 0); 
+
         // read in point cloud of object
         // TODO: Move this somehwere else because it will grow 
         std::string cloudFile; 
@@ -248,7 +250,8 @@ void InputHandler::handle(const std::string& anInput)
         }
         else if ("cube" == objectType)
         {
-            cloudFile = "cube.ply"; 
+            cloudFile = "cube.ply";
+            pos = {-1.9, -1.3, 0.25}; 
         }
         else 
         {
@@ -259,7 +262,8 @@ void InputHandler::handle(const std::string& anInput)
         std::string file = mPackagePath + "/objects/" + cloudFile; 
         sensor_msgs::msg::PointCloud2 cloud; 
 
-        if(!PointCloudHandler::fromFile(file, cloud))
+        // load file and shift to desired global pos
+        if(!PointCloudHandler::fromFile(file, pos, cloud))
         {
             std::cerr << "Failed to send pick plan request"; 
             return; 
@@ -273,9 +277,9 @@ void InputHandler::handle(const std::string& anInput)
 
         // TODO: get this from config somehow 
         geometry_msgs::msg::Point centroid_gl; 
-        centroid_gl.set__x(0); 
-        centroid_gl.set__y(0); 
-        centroid_gl.set__z(0); 
+        centroid_gl.set__x(pos[0]); 
+        centroid_gl.set__y(pos[1]); 
+        centroid_gl.set__z(pos[2]); 
 
         cmd.set__pick_obj_centroid_gl(centroid_gl); 
         cmd.set__pick_obj_point_cloud_gl(cloud); 
@@ -376,6 +380,19 @@ void InputHandler::handle(const std::string& anInput)
         
         RosTopicManager::getInstance()->publishMessage<robot_idl::msg::AbvCommand>("abv/command", cmd); 
         std::cout << "Published goal velocity waypoint (xd yd yawd): " << vehPose[0] << ", " << vehPose[1] << ", " << vehPose[2] << std::endl;
+    }
+    else if ("vehStop" == anInput)
+    {
+        robot_idl::msg::AbvVec3 data; 
+        data.set__x(0); 
+        data.set__y(0); 
+        data.set__yaw(0); 
+
+        robot_idl::msg::AbvCommand cmd; 
+        cmd.set__data(data); 
+        cmd.set__type("STOP");
+        
+        RosTopicManager::getInstance()->publishMessage<robot_idl::msg::AbvCommand>("abv/command", cmd); 
     }
     else if ("gpcGoal" == anInput)
     {

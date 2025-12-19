@@ -13,6 +13,9 @@ find_package(PCL REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(pcl_msgs REQUIRED)
 find_package(pcl_conversions REQUIRED)
+set(PCL_DIR "/usr/local/pcl-1.15/lib/cmake/pcl")
+find_package(PCL REQUIRED)
+find_package(Eigen3 REQUIRED)
 
 set(SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/src/CommanderComms.cpp
@@ -34,6 +37,7 @@ ament_target_dependencies(${PROJECT_NAME}
   robot_idl
   pcl_msgs
   pcl_conversions
+  Eigen3
 )
 
 install(TARGETS ${PROJECT_NAME} 
