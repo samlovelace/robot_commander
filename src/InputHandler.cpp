@@ -515,6 +515,24 @@ void InputHandler::handle(const std::string& anInput)
         RosTopicManager::getInstance()->publishMessage<robot_idl::msg::GpcGoal>("gpc/goal", goal); 
         std::cout << "Sent " << trajTypeForLog << " trajectory command for ABV!" << std::endl; 
     }
+    else if ("abvGuidance" == anInput)
+    {
+        std::string trajType;
+        std::string duration; 
+
+        std::cout << GREEN << "Type: "; 
+        std::getline(std::cin, trajType);
+
+        std::cout << GREEN << "Duration (s): "; 
+        std::getline(std::cin, duration); 
+        double dur = std::stod(duration); 
+
+        robot_idl::msg::AbvGuidanceCommand cmd; 
+        cmd.set__type(trajType); 
+        cmd.set__duration(dur); 
+
+        RosTopicManager::getInstance()->publishMessage<robot_idl::msg::AbvGuidanceCommand>("abv/guidance/command", cmd); 
+    }
     else if (anInput == "help" || anInput == "--help" || anInput == "-h") 
     {
         std::cout << R"(

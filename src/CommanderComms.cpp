@@ -27,6 +27,7 @@ bool CommanderComms::start()
     topicManager->createPublisher<robot_idl::msg::AbvCommand>("abv/command");
     topicManager->createPublisher<robot_idl::msg::GpcGoal>("gpc/goal"); 
     topicManager->createPublisher<robot_idl::msg::ManipulationCommand>("arm/command");
+    topicManager->createPublisher<robot_idl::msg::AbvGuidanceCommand>("abv/guidance/command"); 
     
     topicManager->spinNode(); 
 
