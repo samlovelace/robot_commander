@@ -301,11 +301,29 @@ void InputHandler::handle(const std::string& anInput)
         std_msgs::msg::String type;
         type.set__data(objectType);  
 
-        robot_idl::msg::Command cmd; 
+        robot_idl::msg::VisionCommand cmd; 
         cmd.set__command(action); 
         cmd.set__object_type(type); 
 
-        RosTopicManager::getInstance()->publishMessage<robot_idl::msg::Command>("vision/command", cmd); 
+        RosTopicManager::getInstance()->publishMessage<robot_idl::msg::VisionCommand>("vision/command", cmd); 
+    }
+    else if ("find_tags" == anInput)
+    {
+        std::cout << GREEN << "Type: "; 
+        std::string objectType; 
+        std::getline(std::cin, objectType); 
+
+        std_msgs::msg::String action;
+        action.set__data("find_tags"); 
+
+        std_msgs::msg::String type;
+        type.set__data(objectType);  
+
+        robot_idl::msg::VisionCommand cmd; 
+        cmd.set__command(action); 
+        cmd.set__object_type(type); 
+
+        RosTopicManager::getInstance()->publishMessage<robot_idl::msg::VisionCommand>("vision/command", cmd); 
     }
     else if ("stopVision" == anInput)
     {
@@ -315,11 +333,11 @@ void InputHandler::handle(const std::string& anInput)
         std_msgs::msg::String type;
         type.set__data("none");  
 
-        robot_idl::msg::Command cmd; 
+        robot_idl::msg::VisionCommand cmd; 
         cmd.set__command(action); 
         cmd.set__object_type(type); 
 
-        RosTopicManager::getInstance()->publishMessage<robot_idl::msg::Command>("vision/command", cmd); 
+        RosTopicManager::getInstance()->publishMessage<robot_idl::msg::VisionCommand>("vision/command", cmd); 
     }
     else if ("gpcGoal" == anInput)
     {
